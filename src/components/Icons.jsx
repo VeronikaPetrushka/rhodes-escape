@@ -23,6 +23,13 @@ const Icons = ({ type, active }) => {
       imageSource = require('../assets/panel/4.png');
       active && iconStyle.push(styles.active);
       break;
+    case 'back':
+      imageSource = require('../assets/icons/back.png');
+      break;
+    case 'fav':
+      imageSource = require('../assets/icons/fav.png');
+      active && iconStyle.push(styles.active);
+      break;
   }
 
   return (
