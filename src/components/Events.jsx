@@ -1,11 +1,55 @@
+import React, { useState, useCallback } from 'react';
 import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import events from '../constants/events.js';
+import Icons from './Icons.jsx';
 
 const { height } = Dimensions.get('window');
 
 const Events = () => {
     const navigation = useNavigation();
+    const [favorites, setFavorites] = useState([]);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadFavorites();
+        }, [])
+    );
+
+    const loadFavorites = async () => {
+        try {
+            const storedFavorites = await AsyncStorage.getItem('favorite');
+            if (storedFavorites) {
+                setFavorites(JSON.parse(storedFavorites));
+            }
+        } catch (error) {
+            console.error('Error loading favorites:', error);
+        }
+    };
+
+    const toggleFavorite = async (event) => {
+        try {
+            let updatedFavorites = [...favorites];
+
+            if (favorites.some(fav => fav.name === event.name)) {
+                updatedFavorites = updatedFavorites.filter(fav => fav.name !== event.name);
+            } else {
+                updatedFavorites.push(event);
+            }
+
+            await AsyncStorage.setItem('favorite', JSON.stringify(updatedFavorites));
+            setFavorites(updatedFavorites);
+        } catch (error) {
+            console.error('Error toggling favorite status:', error);
+        }
+    };
+
+    const isFavorite = (event) => {
+        return favorites.some(fav => fav.name === event.name);
+    };
+
+    console.log(favorites)
 
     return (
         <View style={styles.container}>
@@ -19,6 +63,12 @@ const Events = () => {
                             style={styles.card}
                             onPress={() => navigation.navigate('DetailsScreen', {event: event})}
                             >
+                            <TouchableOpacity 
+                                style={styles.favBtn} 
+                                onPress={() => toggleFavorite(event)}
+                                >
+                                <Icons type={'fav'} active={isFavorite(event)} />
+                            </TouchableOpacity>
                             <Image source={event.image} style={styles.image} />
                             <View style={{width: '100%', paddingHorizontal: 12, paddingVertical: 14}}>
                                 <Text style={styles.name}>{event.name}</Text>
@@ -44,6 +94,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingBottom: 100,
         backgroundColor: '#fff'
+    },
+
+    favBtn: {
+        width: 27,
+        height: 24,
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        zIndex: 10
     },
 
     title: {

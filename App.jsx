@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import EventsScreen from './src/screens/EventsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
+import SignEventScreen from './src/screens/SignEventScreen';
 
 enableScreens();
 
@@ -22,6 +23,11 @@ const App = () => {
                   <Stack.Screen 
                       name="DetailsScreen" 
                       component={DetailsScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="SignEventScreen" 
+                      component={SignEventScreen} 
                       options={{ headerShown: false }} 
                   />
               </Stack.Navigator>

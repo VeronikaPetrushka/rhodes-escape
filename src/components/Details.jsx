@@ -1,5 +1,7 @@
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, Dimensions, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Icons from "./Icons";
 
 const { height } = Dimensions.get('window');
@@ -19,7 +21,7 @@ const Details = ({ event }) => {
                 </TouchableOpacity>
                 <TouchableOpacity 
                     style={[styles.toolBtn, {paddingHorizontal: 8}]} 
-                    onPress={() => navigation.navigate('FavoriteScreen')}
+                    onPress={''}
                     >
                     <Icons type={'fav'} />
                 </TouchableOpacity>
@@ -45,7 +47,7 @@ const Details = ({ event }) => {
             </ScrollView>
 
             <View style={styles.signBtnContainer}>
-                <TouchableOpacity style={styles.signBtn}>
+                <TouchableOpacity style={styles.signBtn} onPress={() => navigation.navigate('SignEventScreen', {event: event})}>
                     <Text style={styles.signBtnText}>Sign in</Text>
                 </TouchableOpacity>
             </View>
