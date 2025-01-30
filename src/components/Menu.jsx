@@ -49,12 +49,12 @@ const Menu = () => {
             <View style={{alignItems: 'center'}}>
                 <TouchableOpacity 
                     style={styles.button} 
-                    onPress={() => handleNavigate('GameScreen')}>
+                    onPress={() => handleNavigate('GameLevelsScreen')}>
                     <View style={{width: 24, height: 24}}>
-                        <Icons type={'3'} active={activeButton === 'GameScreen'}/>
+                        <Icons type={'3'} active={activeButton === 'GameLevelsScreen'}/>
                     </View>
                 </TouchableOpacity>
-                <Text style={[styles.btnText, activeButton === 'GameScreen' && {color: '#d8b281'}]}>Game</Text>
+                <Text style={[styles.btnText, activeButton === 'GameLevelsScreen' && {color: '#d8b281'}]}>Game</Text>
             </View>
 
             <View style={{alignItems: 'center'}}>

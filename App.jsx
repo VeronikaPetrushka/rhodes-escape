@@ -9,6 +9,10 @@ import SignEventScreen from './src/screens/SignEventScreen';
 import BeachesScreen from './src/screens/BeachesScreen';
 import BeachDetailsScreen from './src/screens/BeachDetailsScreen';
 import AddBeachScreen from './src/screens/AddBeachScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import FavoritesScreen from './src/screens/FavoritesScreen';
+import GameLevelsScreen from './src/screens/GameLevelsScreen';
+import GameScreen from './src/screens/GameScreen';
 
 enableScreens();
 
@@ -46,6 +50,26 @@ const App = () => {
                   <Stack.Screen 
                       name="AddBeachScreen" 
                       component={AddBeachScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="SettingsScreen" 
+                      component={SettingsScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="FavoritesScreen" 
+                      component={FavoritesScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="GameLevelsScreen" 
+                      component={GameLevelsScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="GameScreen" 
+                      component={GameScreen} 
                       options={{ headerShown: false }} 
                   />
               </Stack.Navigator>

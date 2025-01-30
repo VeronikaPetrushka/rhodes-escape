@@ -132,7 +132,7 @@ const SignEvent = ({ event }) => {
             <TouchableOpacity 
                 style={[styles.saveBtn, 
                     !name || !description || !phone && {backgroundColor: '#2a2a2a'}, 
-                    saved && {backgroundColor: '#b58c32'}
+                    saved && {backgroundColor: '#d8b281'}
                 ]} 
                 onPress={saved ? navigation.goBack : handleSave}
                 disabled={!saved && !name || !description || !phone}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
         padding: 20,
         paddingTop: height * 0.07,
         alignItems: 'center'
@@ -166,21 +166,21 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 28,
         fontWeight: '800',
-        color: '#fff',
+        color: '#000',
         lineHeight: 33.41,
     },
 
     backText: {
         fontSize: 17,
         fontWeight: '400',
-        color: '#fff',
+        color: '#000',
         lineHeight: 22
     },
 
     label: {
         fontSize: 17,
         fontWeight: '400',
-        color: '#fff',
+        color: '#000',
         lineHeight: 20.3,
         marginBottom: 16
     },
@@ -196,8 +196,9 @@ const styles = StyleSheet.create({
         width: '100%',
         fontSize: 16,
         fontWeight: '400',
-        color: '#fff',
-        backgroundColor: '#151515',
+        color: '#000',
+        backgroundColor: '#f6f6f6',
+        borderColor: '#d8b281',
         borderWidth: 1,
         borderRadius: 12,
         paddingHorizontal: 20,
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
         padding: 13,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#222be6',
+        backgroundColor: '#d8b281',
         borderRadius: 16,
         position: 'absolute',
         alignSelf: 'center',

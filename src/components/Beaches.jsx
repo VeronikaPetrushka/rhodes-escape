@@ -1,6 +1,6 @@
 // favorites
 import React, { useState, useCallback } from 'react';
-import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import beaches from '../constants/beaches.js';
@@ -13,16 +13,28 @@ const Beaches = () => {
     const [favorites, setFavorites] = useState([]);
     const [button, setButton] = useState('general');
     const [addedBeaches, setAddedBeaches] = useState([]);
-    const [map, setMap] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedBeach, setSelectedBeach] = useState(null);
 
     const loadFavorites = async () => {
         try {
-            const storedFavorites = await AsyncStorage.getItem('favorite');
+            const storedFavorites = await AsyncStorage.getItem('favoriteBeaches');
             if (storedFavorites) {
                 setFavorites(JSON.parse(storedFavorites));
             }
         } catch (error) {
             console.error('Error loading favorites:', error);
+        }
+    };
+
+    const loadBeaches = async () => {
+        try {
+            const storedBeaches = await AsyncStorage.getItem('beaches');
+            if (storedBeaches) {
+                setAddedBeaches(JSON.parse(storedBeaches));
+            }
+        } catch (error) {
+            console.error('Error loading beaches:', error);
         }
     };
 
@@ -37,7 +49,7 @@ const Beaches = () => {
                 updatedFavorites.push(beach);
             }
 
-            await AsyncStorage.setItem('favorite', JSON.stringify(updatedFavorites));
+            await AsyncStorage.setItem('favoriteBeaches', JSON.stringify(updatedFavorites));
             setFavorites(updatedFavorites);
         } catch (error) {
             console.error('Error toggling favorite:', error);
@@ -51,6 +63,7 @@ const Beaches = () => {
     useFocusEffect(
         useCallback(() => {
             loadFavorites();
+            loadBeaches();
         }, [])
     );
 
@@ -58,11 +71,20 @@ const Beaches = () => {
 
     const filteredBeaches = button === 'general' ? beaches : addedBeaches;
 
-    const handleMapToggle = () => {
-        if(map) {
-            setMap(false)
-        } else {
-            setMap(true)
+    const confirmDelete = (beach) => {
+        setSelectedBeach(beach);
+        setModalVisible(true);
+    };
+    
+    const deleteBeach = async () => {
+        try {
+            const updatedBeaches = addedBeaches.filter(b => b.name !== selectedBeach.name);
+            await AsyncStorage.setItem('beaches', JSON.stringify(updatedBeaches));
+            setAddedBeaches(updatedBeaches);
+            setModalVisible(false);
+            setSelectedBeach(null);
+        } catch (error) {
+            console.error('Error deleting beach:', error);
         }
     };
 
@@ -71,20 +93,12 @@ const Beaches = () => {
 
             <View style={{width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16, paddingHorizontal: 16}}>
                 <Text style={styles.title}>Rhodes Beaches</Text>
-                <View style={{alignItems: 'center', flexDirection: 'row'}}>
-                    <TouchableOpacity 
-                        style={{width: 44, height: 44, marginRight: 5}} 
-                        onPress={handleMapToggle}
-                        >
-                        <Icons type={'map'} />
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={{width: 44, height: 44}} 
-                        onPress={() => navigation.navigate('AddBeachScreen')}
-                        >
-                        <Icons type={'plus'} />
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity 
+                    style={{width: 44, height: 44}} 
+                    onPress={() => navigation.navigate('AddBeachScreen')}
+                    >
+                    <Icons type={'plus'} />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.btnsContainer}>
@@ -119,8 +133,20 @@ const Beaches = () => {
                                             >
                                             <Icons type={'fav'} active={isFavorite(beach)} />
                                         </TouchableOpacity>
-                                        <Image source={beach.image} style={{width: '100%', height: 177, borderRadius: 12, marginBottom: 8}} />
+                                        <Image
+                                            source={typeof beach.image === 'string' ? { uri: beach.image } : beach.image} 
+                                            style={{width: '100%', height: 177, borderRadius: 12, marginBottom: 8}} />
                                         <Text style={styles.name}>{beach.name}</Text>
+                                        {
+                                            filteredBeaches === addedBeaches && (
+                                                <TouchableOpacity 
+                                                    style={{width: 24, height: 24, position: 'absolute', top: 16, left: 16, zIndex: 10}}
+                                                    onPress={() => confirmDelete(beach)}
+                                                    >
+                                                    <Icons type={'cross-img'} />
+                                                </TouchableOpacity>
+                                            )
+                                        }
                                     </TouchableOpacity>
                                 ))
                             }
@@ -134,6 +160,30 @@ const Beaches = () => {
                     )
                 }
             </View>
+
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+                animationType="fade"
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalText}>Are you sure you want to delete this beach?</Text>
+                        <TouchableOpacity 
+                            style={styles.modalBtn}
+                            onPress={deleteBeach}
+                        >
+                            <Text style={styles.deleteButtonText}>Delete</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                            style={styles.modalBtn}
+                            onPress={() => setModalVisible(false)}
+                        >
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
 
         </View>
     )
@@ -204,7 +254,53 @@ const styles = StyleSheet.create({
         lineHeight: 22.4,
         color: '#000',
         textAlign: 'center'
-    }
+    },
+
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+
+    modalContainer: {
+        width: '80%',
+        backgroundColor: '#fff',
+        padding: 20,
+        paddingBottom: 0,
+        borderRadius: 14,
+        alignItems: 'center',
+    },
+
+    modalText: {
+        fontSize: 18,
+        marginBottom: 20,
+        textAlign: 'center'
+    },
+
+    modalBtn: {
+        width: '100%',
+        borderTopWidth: 0.33,
+        borderTopColor: '#ececec',
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    deleteButtonText: {
+        color: '#dd0326',
+        fontWeight: '600',
+        fontSize: 17,
+        lineHeight: 22
+    },
+
+    closeButtonText: {
+        color: '#d8b281',
+        fontWeight: '400',
+        fontSize: 17,
+        lineHeight: 22
+    },
+    
 
 })
 

@@ -13,7 +13,7 @@ const EventDetails = ({ event }) => {
 
     const loadFavorites = async () => {
         try {
-            const storedFavorites = await AsyncStorage.getItem('favorite');
+            const storedFavorites = await AsyncStorage.getItem('favoriteEvents');
             if (storedFavorites) {
                 setFavorites(JSON.parse(storedFavorites));
             }
@@ -33,7 +33,7 @@ const EventDetails = ({ event }) => {
                 updatedFavorites.push(event);
             }
 
-            await AsyncStorage.setItem('favorite', JSON.stringify(updatedFavorites));
+            await AsyncStorage.setItem('favoriteEvents', JSON.stringify(updatedFavorites));
             setFavorites(updatedFavorites);
         } catch (error) {
             console.error('Error toggling favorite:', error);

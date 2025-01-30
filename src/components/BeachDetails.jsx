@@ -13,7 +13,7 @@ const BeachDetails = ({ beach }) => {
 
     const loadFavorites = async () => {
         try {
-            const storedFavorites = await AsyncStorage.getItem('favorite');
+            const storedFavorites = await AsyncStorage.getItem('favoriteBeaches');
             if (storedFavorites) {
                 setFavorites(JSON.parse(storedFavorites));
             }
@@ -33,7 +33,7 @@ const BeachDetails = ({ beach }) => {
                 updatedFavorites.push(beach);
             }
 
-            await AsyncStorage.setItem('favorite', JSON.stringify(updatedFavorites));
+            await AsyncStorage.setItem('favoriteBeaches', JSON.stringify(updatedFavorites));
             setFavorites(updatedFavorites);
         } catch (error) {
             console.error('Error toggling favorite:', error);
@@ -66,7 +66,7 @@ const BeachDetails = ({ beach }) => {
                 </TouchableOpacity>
             </View>
 
-            <Image source={beach.image} style={styles.image} />
+            <Image source={typeof beach.image === 'string' ? { uri: beach.image } : beach.image} style={styles.image} />
 
             <ScrollView style={{width: '100%', paddingHorizontal: 16}}>
 
@@ -76,10 +76,14 @@ const BeachDetails = ({ beach }) => {
 
                 <Text style={styles.description}>{beach.description}</Text>
 
-                <Text style={[styles.name, {fontSize: 20}]}>Facilities on the site</Text>
+                {
+                    beach.facilities && (
+                        <Text style={[styles.name, {fontSize: 20}]}>Facilities on the site</Text>
+                    )
+                }
 
                 {
-                    beach.facilities.map((f, i) => (
+                    beach.facilities?.map((f, i) => (
                         <View key={i} style={{width: '100%', alignItems: 'flex-start', marginBottom: 12}}>
                             <Text style={styles.facilityName}>{f.name}</Text>
                             <Text style={styles.facilityDesc}>{f.description}</Text>

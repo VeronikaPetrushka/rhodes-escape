@@ -42,6 +42,21 @@ const Icons = ({ type, active }) => {
     case 'cross-img':
       imageSource = require('../assets/icons/cross-img.png');
       break;
+    case 'settings-fav':
+      imageSource = require('../assets/icons/settings-fav.png');
+      break;
+    case 'settings-policy':
+      imageSource = require('../assets/icons/settings-policy.png');
+      break;
+    case 'settings-rate':
+      imageSource = require('../assets/icons/settings-rate.png');
+      break;
+    case 'success':
+      imageSource = require('../assets/icons/success.png');
+      break;
+    case 'locked':
+      imageSource = require('../assets/icons/locked.png');
+      break;
   }
 
   return (

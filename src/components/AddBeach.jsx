@@ -13,28 +13,26 @@ const AddBeach = () => {
     const [location, setLocation] = useState('')
     const [description, setDescription] = useState('');
     const [saved, setSaved] = useState(false);
-    const [images, setImages] = useState([]);
+    const [image, setImage] = useState();
 
     const resetInput = (setter) => {
         setter('');
     };
 
     const handleImageSelect = () => {
-        launchImageLibrary({ mediaType: 'photo', selectionLimit: 0 }, (response) => {
+        launchImageLibrary({ mediaType: 'photo' }, (response) => {
             if (!response.didCancel && !response.error && response.assets) {
-                const newImages = response.assets.map(asset => asset.uri);
-                setImages(prevImages => [...prevImages, ...newImages]);
+                setImage(response.assets[0].uri);
             }
         });
     };
 
-    const handleImageDelete = (index) => {
-        const updatedImages = images.filter((_, i) => i !== index);
-        setImages(updatedImages);
+    const handleImageDelete = () => {
+        setImage(null);
     };  
 
     const handleSave = async () => {
-        if (!name || !description || !phone) {
+        if (!name || !description || !location || !image) {
             alert('Please fill out all fields to proceed.');
             return;
         }
@@ -43,7 +41,7 @@ const AddBeach = () => {
             name,
             location,
             description,
-            images,
+            image,
         };
     
         try {
@@ -138,31 +136,21 @@ const AddBeach = () => {
                                 ) : null}
                             </View>
 
-                            <Text style={styles.label}>Photos</Text>
-                            {images.length > 0 ? (
-                                <ScrollView horizontal>
-                                    {images.map((image, index) => (
-                                        <View key={index} style={styles.imageContainer}>
-                                            <Image source={{ uri: image }} style={styles.uploadedImage} />
-                                            <TouchableOpacity style={styles.crossImg} onPress={() => handleImageDelete(index)}>
-                                                <Icons type={'cross-img'} />
-                                            </TouchableOpacity>
-                                        </View>
-                                    ))}
-                                    <View style={styles.imageContainer}>
+                            <Text style={styles.label}>Photo</Text>
+                            <View style={styles.imageContainer}>
+                                {image ? (
+                                    <>
+                                        <Image source={{ uri: image }} style={styles.uploadedImage} />
+                                        <TouchableOpacity style={styles.crossImg} onPress={handleImageDelete}>
+                                            <Icons type={'cross-img'} />
+                                        </TouchableOpacity>
+                                    </>
+                                ) : (
                                         <TouchableOpacity style={styles.add} onPress={handleImageSelect}>
                                             <Icons type={'plus'} />
                                         </TouchableOpacity>
-                                    </View>
-                                </ScrollView>
-                            ) : (
-                                <View style={styles.imageContainer}>
-                                    <TouchableOpacity style={styles.add} onPress={handleImageSelect}>
-                                        <Icons type={'plus'} />
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-
+                                )}
+                            </View>
                             <View style={{height: 200}} />
                         </ScrollView>
 
@@ -172,11 +160,11 @@ const AddBeach = () => {
 
             <TouchableOpacity 
                 style={[styles.saveBtn, 
-                    !name || !description || !phone && {backgroundColor: '#2a2a2a'}, 
-                    saved && {backgroundColor: '#b58c32'}
+                    !name || !description || !location || !image && {backgroundColor: '#d8b281'}, 
+                    saved && {backgroundColor: '#d8b281'}
                 ]} 
                 onPress={saved ? navigation.goBack : handleSave}
-                disabled={!saved && !name || !description || !phone}
+                disabled={!saved && !name || !description || !location || !image}
                 >
                 <Text style={styles.saveBtnText}>{saved ? 'Close' : 'Save'}</Text>
             </TouchableOpacity>
@@ -189,7 +177,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
         padding: 20,
         paddingTop: height * 0.07,
         alignItems: 'center'
@@ -207,21 +195,21 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 28,
         fontWeight: '800',
-        color: '#fff',
+        color: '#000',
         lineHeight: 33.41,
     },
 
     backText: {
         fontSize: 17,
         fontWeight: '400',
-        color: '#fff',
+        color: '#000',
         lineHeight: 22
     },
 
     label: {
         fontSize: 17,
         fontWeight: '400',
-        color: '#fff',
+        color: '#000',
         lineHeight: 20.3,
         marginBottom: 16
     },
@@ -237,8 +225,9 @@ const styles = StyleSheet.create({
         width: '100%',
         fontSize: 16,
         fontWeight: '400',
-        color: '#fff',
-        backgroundColor: '#151515',
+        color: '#000',
+        backgroundColor: '#f6f6f6',
+        borderColor: '#d8b281',
         borderWidth: 1,
         borderRadius: 12,
         paddingHorizontal: 20,
@@ -267,7 +256,7 @@ const styles = StyleSheet.create({
         padding: 13,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#222be6',
+        backgroundColor: '#d8b281',
         borderRadius: 16,
         position: 'absolute',
         alignSelf: 'center',
@@ -281,28 +270,12 @@ const styles = StyleSheet.create({
         lineHeight: 22
     },
 
-    savedNormContainer: {
-        position: 'absolute',
-        top: 100,
-        alignSelf: 'center',
-        alignItems: 'center'
-    },
-
-    dateIcon: {
-        width: 24,
-        height: 24,
-        position: 'absolute',
-        top: 15,
-        left: 20,
-        zIndex: 10
-    },
-
     imageContainer: {
         width: 100,
         height: 150,
-        backgroundColor: '#3d3d3d',
+        backgroundColor: '#f6f6f6',
         borderWidth: 1,
-        borderColor: "#000",
+        borderColor: "#d8b281",
         borderRadius: 12,
         marginBottom: 24,
         alignItems: 'center',
@@ -329,9 +302,6 @@ const styles = StyleSheet.create({
         top: 5,
         right: 5,
         zIndex: 10,
-        padding: 3,
-        backgroundColor: '#ececec',
-        borderRadius: 30
     },
 
 })
