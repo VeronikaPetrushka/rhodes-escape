@@ -4,8 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import EventsScreen from './src/screens/EventsScreen';
-import DetailsScreen from './src/screens/DetailsScreen';
+import EventDetailsScreen from './src/screens/EventDetailsScreen';
 import SignEventScreen from './src/screens/SignEventScreen';
+import BeachesScreen from './src/screens/BeachesScreen';
+import BeachDetailsScreen from './src/screens/BeachDetailsScreen';
+import AddBeachScreen from './src/screens/AddBeachScreen';
 
 enableScreens();
 
@@ -21,13 +24,28 @@ const App = () => {
                       options={{ headerShown: false }} 
                   />
                   <Stack.Screen 
-                      name="DetailsScreen" 
-                      component={DetailsScreen} 
+                      name="EventDetailsScreen" 
+                      component={EventDetailsScreen} 
                       options={{ headerShown: false }} 
                   />
                   <Stack.Screen 
                       name="SignEventScreen" 
                       component={SignEventScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="BeachesScreen" 
+                      component={BeachesScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="BeachDetailsScreen" 
+                      component={BeachDetailsScreen} 
+                      options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                      name="AddBeachScreen" 
+                      component={AddBeachScreen} 
                       options={{ headerShown: false }} 
                   />
               </Stack.Navigator>

@@ -1,3 +1,4 @@
+// favorites
 import React, { useState, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, Dimensions, ScrollView } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,8 +7,46 @@ import Icons from "./Icons";
 
 const { height } = Dimensions.get('window');
 
-const Details = ({ event }) => {
+const EventDetails = ({ event }) => {
     const navigation = useNavigation();
+    const [favorites, setFavorites] = useState([]);
+
+    const loadFavorites = async () => {
+        try {
+            const storedFavorites = await AsyncStorage.getItem('favorite');
+            if (storedFavorites) {
+                setFavorites(JSON.parse(storedFavorites));
+            }
+        } catch (error) {
+            console.error('Error loading favorites:', error);
+        }
+    };
+
+    const toggleFavorite = async () => {
+        try {
+            let updatedFavorites = [...favorites];
+            const index = updatedFavorites.findIndex(fav => fav.name === event.name);
+
+            if (index !== -1) {
+                updatedFavorites.splice(index, 1);
+            } else {
+                updatedFavorites.push(event);
+            }
+
+            await AsyncStorage.setItem('favorite', JSON.stringify(updatedFavorites));
+            setFavorites(updatedFavorites);
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            loadFavorites();
+        }, [])
+    );
+
+    console.log(favorites)
 
     return (
         <View style={styles.container}>
@@ -21,9 +60,9 @@ const Details = ({ event }) => {
                 </TouchableOpacity>
                 <TouchableOpacity 
                     style={[styles.toolBtn, {paddingHorizontal: 8}]} 
-                    onPress={''}
+                    onPress={toggleFavorite}
                     >
-                    <Icons type={'fav'} />
+                    <Icons type={'fav'} active={favorites.some(fav => fav.name === event.name)} />
                 </TouchableOpacity>
             </View>
 
@@ -152,4 +191,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Details;
+export default EventDetails;

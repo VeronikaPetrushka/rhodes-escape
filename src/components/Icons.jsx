@@ -30,6 +30,18 @@ const Icons = ({ type, active }) => {
       imageSource = require('../assets/icons/fav.png');
       active && iconStyle.push(styles.active);
       break;
+    case 'map':
+      imageSource = require('../assets/icons/map.png');
+      break;
+    case 'plus':
+      imageSource = require('../assets/icons/plus.png');
+      break;
+    case 'cross':
+      imageSource = require('../assets/icons/cross.png');
+      break;
+    case 'cross-img':
+      imageSource = require('../assets/icons/cross-img.png');
+      break;
   }
 
   return (

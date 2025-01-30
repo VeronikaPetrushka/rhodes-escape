@@ -1,21 +1,37 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Dimensions, TouchableOpacity, Text, TextInput, ScrollView, Image } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { useNavigation } from "@react-navigation/native";
 import Icons from "./Icons";
 
 const { height } = Dimensions.get('window')
 
-const SignEvent = ({ event }) => {
+const AddBeach = () => {
     const navigation = useNavigation();
-    const [name, setName] = useState(null);
-    const [phone, setPhone] = useState(null);
-    const [description, setDescription] = useState(null);
+    const [name, setName] = useState('');
+    const [location, setLocation] = useState('')
+    const [description, setDescription] = useState('');
     const [saved, setSaved] = useState(false);
+    const [images, setImages] = useState([]);
 
     const resetInput = (setter) => {
         setter('');
     };
+
+    const handleImageSelect = () => {
+        launchImageLibrary({ mediaType: 'photo', selectionLimit: 0 }, (response) => {
+            if (!response.didCancel && !response.error && response.assets) {
+                const newImages = response.assets.map(asset => asset.uri);
+                setImages(prevImages => [...prevImages, ...newImages]);
+            }
+        });
+    };
+
+    const handleImageDelete = (index) => {
+        const updatedImages = images.filter((_, i) => i !== index);
+        setImages(updatedImages);
+    };  
 
     const handleSave = async () => {
         if (!name || !description || !phone) {
@@ -23,29 +39,29 @@ const SignEvent = ({ event }) => {
             return;
         }
     
-        const newSignedEvent = {
-            event,
+        const newBeach = {
             name,
+            location,
             description,
-            phone,
+            images,
         };
     
         try {
-            const storedSignedEvents = await AsyncStorage.getItem('signedEvents');
+            const storedBeaches = await AsyncStorage.getItem('beaches');
             
-            const signedEventsArray = storedSignedEvents ? JSON.parse(storedSignedEvents) : [];
+            const beachesArray = storedBeaches ? JSON.parse(storedBeaches) : [];
     
-            signedEventsArray.push(newSignedEvent);
+            beachesArray.push(newBeach);
     
-            await AsyncStorage.setItem('signedEvents', JSON.stringify(signedEventsArray));
+            await AsyncStorage.setItem('beaches', JSON.stringify(beachesArray));
     
-            console.log('Updated signed events:', signedEventsArray);
+            console.log('Updated beaches:', beachesArray);
             
             setSaved(true);
     
         } catch (error) {
-            console.error('Error saving your sign:', error);
-            alert('Failed to save the your sign. Please try again.');
+            console.error('Error saving your beach:', error);
+            alert('Failed to save the your beach. Please try again.');
         }
     };
     
@@ -59,13 +75,13 @@ const SignEvent = ({ event }) => {
                     >
                     <Icons type={'back'} />
                 </TouchableOpacity>
-                <Text style={styles.title}>{!saved ? 'Sign up event' : ''}</Text>
+                <Text style={styles.title}>{!saved ? 'Add new beach' : ''}</Text>
             </View>
 
             {
                 saved ? (
                     <View style={{width: '100%', height: '90%', alignItems: 'center'}}>
-                        <Text style={styles.title}>You successfully signed up</Text>
+                        <Text style={styles.title}>You successfully add new beach</Text>
                         <View style={{width: 180, height: 180, marginVertical: 'auto'}}>
                             <Image source={require('../assets/decor/saved.png')} style={{width: '100%', height: '100%', resizeMode: 'contain'}} />
                         </View>
@@ -73,7 +89,7 @@ const SignEvent = ({ event }) => {
                 ) : (
                     <View style={{width: '100%', alignItems: 'flex-start'}}>
                         <ScrollView style={{width: '100%'}}>
-                            <Text style={styles.label}>Your name</Text>
+                            <Text style={styles.label}>Beach name</Text>
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -89,23 +105,23 @@ const SignEvent = ({ event }) => {
                                 ) : null}
                             </View>
 
-                            <Text style={styles.label}>Your phone</Text>
+                            <Text style={styles.label}>Address</Text>
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="+111 111 111"
+                                    placeholder="Where is the beach ?"
                                     placeholderTextColor="#999"
-                                    value={phone}
-                                    onChangeText={setPhone}
+                                    value={location}
+                                    onChangeText={setLocation}
                                 />
-                                {phone ? (
-                                    <TouchableOpacity style={styles.cross} onPress={() => resetInput(setPhone)}>
+                                {location ? (
+                                    <TouchableOpacity style={styles.cross} onPress={() => resetInput(setLocation)}>
                                         <Icons type={'cross'} />
                                     </TouchableOpacity>
                                 ) : null}
                             </View>
 
-                            <Text style={styles.label}>Comment</Text>
+                            <Text style={styles.label}>Description</Text>
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -121,6 +137,31 @@ const SignEvent = ({ event }) => {
                                     </TouchableOpacity>
                                 ) : null}
                             </View>
+
+                            <Text style={styles.label}>Photos</Text>
+                            {images.length > 0 ? (
+                                <ScrollView horizontal>
+                                    {images.map((image, index) => (
+                                        <View key={index} style={styles.imageContainer}>
+                                            <Image source={{ uri: image }} style={styles.uploadedImage} />
+                                            <TouchableOpacity style={styles.crossImg} onPress={() => handleImageDelete(index)}>
+                                                <Icons type={'cross-img'} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
+                                    <View style={styles.imageContainer}>
+                                        <TouchableOpacity style={styles.add} onPress={handleImageSelect}>
+                                            <Icons type={'plus'} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </ScrollView>
+                            ) : (
+                                <View style={styles.imageContainer}>
+                                    <TouchableOpacity style={styles.add} onPress={handleImageSelect}>
+                                        <Icons type={'plus'} />
+                                    </TouchableOpacity>
+                                </View>
+                            )}
 
                             <View style={{height: 200}} />
                         </ScrollView>
@@ -256,6 +297,43 @@ const styles = StyleSheet.create({
         zIndex: 10
     },
 
+    imageContainer: {
+        width: 100,
+        height: 150,
+        backgroundColor: '#3d3d3d',
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 12,
+        marginBottom: 24,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10
+    },
+
+    uploadedImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+        borderRadius: 12
+    },
+
+    add: {
+        width: 44,
+        height: 44
+    },
+
+    crossImg: {
+        width: 27,
+        height: 27,
+        position: 'absolute',
+        top: 5,
+        right: 5,
+        zIndex: 10,
+        padding: 3,
+        backgroundColor: '#ececec',
+        borderRadius: 30
+    },
+
 })
 
-export default SignEvent;
+export default AddBeach;

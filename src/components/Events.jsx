@@ -1,3 +1,4 @@
+// favorites
 import React, { useState, useCallback } from 'react';
 import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,12 +11,6 @@ const { height } = Dimensions.get('window');
 const Events = () => {
     const navigation = useNavigation();
     const [favorites, setFavorites] = useState([]);
-
-    useFocusEffect(
-        useCallback(() => {
-            loadFavorites();
-        }, [])
-    );
 
     const loadFavorites = async () => {
         try {
@@ -31,9 +26,10 @@ const Events = () => {
     const toggleFavorite = async (event) => {
         try {
             let updatedFavorites = [...favorites];
+            const index = updatedFavorites.findIndex(fav => fav.name === event.name);
 
-            if (favorites.some(fav => fav.name === event.name)) {
-                updatedFavorites = updatedFavorites.filter(fav => fav.name !== event.name);
+            if (index !== -1) {
+                updatedFavorites.splice(index, 1);
             } else {
                 updatedFavorites.push(event);
             }
@@ -41,13 +37,19 @@ const Events = () => {
             await AsyncStorage.setItem('favorite', JSON.stringify(updatedFavorites));
             setFavorites(updatedFavorites);
         } catch (error) {
-            console.error('Error toggling favorite status:', error);
+            console.error('Error toggling favorite:', error);
         }
     };
 
     const isFavorite = (event) => {
         return favorites.some(fav => fav.name === event.name);
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            loadFavorites();
+        }, [])
+    );
 
     console.log(favorites)
 
@@ -61,7 +63,7 @@ const Events = () => {
                         <TouchableOpacity 
                             key={index} 
                             style={styles.card}
-                            onPress={() => navigation.navigate('DetailsScreen', {event: event})}
+                            onPress={() => navigation.navigate('EventDetailsScreen', {event: event})}
                             >
                             <TouchableOpacity 
                                 style={styles.favBtn} 
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingBottom: 100,
+        paddingBottom: 90,
         backgroundColor: '#fff'
     },
 

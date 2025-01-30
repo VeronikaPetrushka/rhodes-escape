@@ -1,12 +1,10 @@
 import { View } from "react-native"
-import Details from "../components/Details"
+import AddBeach from "../components/AddBeach"
 
-const DetailsScreen = ({ route }) => {
-    const { event } = route.params;
-
+const AddBeachScreen = () => {
     return (
         <View style={styles.container}>
-            <Details event={event} />
+            <AddBeach />
         </View>
     )
 }; 
@@ -18,4 +16,4 @@ const styles = {
     }
 }
 
-export default DetailsScreen;
+export default AddBeachScreen;

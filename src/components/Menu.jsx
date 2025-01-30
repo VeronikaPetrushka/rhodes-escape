@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
         padding: 20,
         flexDirection: 'row',
         backgroundColor: '#fff',
+        borderTopColor: '#ececec',
+        borderTopWidth: 2,
     },
     
     button: {
