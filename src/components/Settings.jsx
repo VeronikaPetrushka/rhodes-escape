@@ -12,7 +12,6 @@ const Beaches = () => {
         Linking.openURL(url).catch((err) => console.error('Failed to open URL:', err));
     };    
 
-// change
     const handleRate = () => {
         const url = Platform.select({
             ios: 'https://apps.apple.com/us/app/rhodes-escape/id6741211670',
