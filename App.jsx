@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import EventsScreen from './src/screens/EventsScreen';
 import EventDetailsScreen from './src/screens/EventDetailsScreen';
-import SignEventScreen from './src/screens/SignEventScreen';
 import BeachesScreen from './src/screens/BeachesScreen';
 import BeachDetailsScreen from './src/screens/BeachDetailsScreen';
 import AddBeachScreen from './src/screens/AddBeachScreen';
@@ -65,11 +64,6 @@ const App = () => {
                   <Stack.Screen 
                       name="EventDetailsScreen" 
                       component={EventDetailsScreen} 
-                      options={{ headerShown: false }} 
-                  />
-                  <Stack.Screen 
-                      name="SignEventScreen" 
-                      component={SignEventScreen} 
                       options={{ headerShown: false }} 
                   />
                   <Stack.Screen 

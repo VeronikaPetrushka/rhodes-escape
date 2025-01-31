@@ -83,13 +83,8 @@ const EventDetails = ({ event }) => {
                         <Text key={i} style={styles.description}>{desc}</Text>
                     ))
                 }
+                <View style={{height: 100}} />
             </ScrollView>
-
-            <View style={styles.signBtnContainer}>
-                <TouchableOpacity style={styles.signBtn} onPress={() => navigation.navigate('SignEventScreen', {event: event})}>
-                    <Text style={styles.signBtnText}>Sign in</Text>
-                </TouchableOpacity>
-            </View>
 
         </View>
     )
@@ -100,7 +95,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingBottom: 100,
         backgroundColor: '#fff'
     },
 
