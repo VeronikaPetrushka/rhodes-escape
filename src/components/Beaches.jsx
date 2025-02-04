@@ -1,6 +1,6 @@
 // favorites
 import React, { useState, useCallback } from 'react';
-import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet, Modal } from 'react-native';
+import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet, Modal, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import beaches from '../constants/beaches.js';
@@ -89,103 +89,106 @@ const Beaches = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/back/1.png')} style={{flex: 1}}>
+            <View style={styles.container}>
 
-            <View style={{width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16, paddingHorizontal: 16}}>
-                <Text style={styles.title}>Rhodes Beaches</Text>
-                <TouchableOpacity 
-                    style={{width: 44, height: 44}} 
-                    onPress={() => navigation.navigate('AddBeachScreen')}
-                    >
-                    <Icons type={'plus'} />
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.btnsContainer}>
-                <TouchableOpacity 
-                    style={[styles.btn, button === 'general' && {backgroundColor: '#d8b281'}]} 
-                    onPress={() => setButton('general')}
-                    >
-                    <Text style={[styles.btnText, button === 'general' && {color: '#fff', fontWeight: '600'}]} >General</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={[styles.btn, button === 'added' && {backgroundColor: '#d8b281'}]}
-                    onPress={() => setButton('added')}
-                    >
-                    <Text style={[styles.btnText, button === 'added' && {color: '#fff', fontWeight: '600'}]} >Added</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={{width: '100%', height: '100%', backgroundColor: '#fff', padding: 16}}>
-                {
-                    filteredBeaches.length > 0 ? (
-                        <ScrollView style={{width: '100%'}}>
-                            {
-                                filteredBeaches.map((beach, index) => (
-                                    <TouchableOpacity 
-                                        key={index} 
-                                        style={{width: '100%', marginBottom: 20}}
-                                        onPress={() => navigation.navigate('BeachDetailsScreen', {beach: beach})}
-                                        >
-                                        <TouchableOpacity 
-                                            style={styles.favBtn} 
-                                            onPress={() => toggleFavorite(beach)}
-                                            >
-                                            <Icons type={'fav'} active={isFavorite(beach)} />
-                                        </TouchableOpacity>
-                                        <Image
-                                            source={typeof beach.image === 'string' ? { uri: beach.image } : beach.image} 
-                                            style={{width: '100%', height: 177, borderRadius: 12, marginBottom: 8}} />
-                                        <Text style={styles.name}>{beach.name}</Text>
-                                        {
-                                            filteredBeaches === addedBeaches && (
-                                                <TouchableOpacity 
-                                                    style={{width: 24, height: 24, position: 'absolute', top: 16, left: 16, zIndex: 10}}
-                                                    onPress={() => confirmDelete(beach)}
-                                                    >
-                                                    <Icons type={'cross-img'} />
-                                                </TouchableOpacity>
-                                            )
-                                        }
-                                    </TouchableOpacity>
-                                ))
-                            }
-                            <View style={{height: 100}} />
-                        </ScrollView>
-                    ) : (
-                        <View style={{width: '80%', alignSelf: 'center', alignItems: 'center', marginVertical: 'auto'}}>
-                            <Image source={require('../assets/decor/nothing.png')} style={{width: 140, height: 140, resizeMode: 'contain', marginBottom: 24}} />
-                            <Text style={styles.nothingText}>There aren’t any beaches yet, please add something</Text>
-                        </View>
-                    )
-                }
-            </View>
-
-            <Modal
-                transparent={true}
-                visible={modalVisible}
-                animationType="fade"
-            >
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.modalText}>Are you sure you want to delete this beach?</Text>
-                        <TouchableOpacity 
-                            style={styles.modalBtn}
-                            onPress={deleteBeach}
+                <View style={{width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16, paddingHorizontal: 16}}>
+                    <Text style={styles.title}>Rhodes Beaches</Text>
+                    <TouchableOpacity 
+                        style={{width: 44, height: 44, backgroundColor: '#ececec', padding: 5, borderRadius: 12}} 
+                        onPress={() => navigation.navigate('AddBeachScreen')}
                         >
-                            <Text style={styles.deleteButtonText}>Delete</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.modalBtn}
-                            onPress={() => setModalVisible(false)}
-                        >
-                            <Text style={styles.closeButtonText}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
+                        <Icons type={'plus'} />
+                    </TouchableOpacity>
                 </View>
-            </Modal>
 
-        </View>
+                <View style={styles.btnsContainer}>
+                    <TouchableOpacity 
+                        style={[styles.btn, button === 'general' && {backgroundColor: '#d8b281'}]} 
+                        onPress={() => setButton('general')}
+                        >
+                        <Text style={[styles.btnText, button === 'general' && {color: '#fff', fontWeight: '600'}]} >General</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[styles.btn, button === 'added' && {backgroundColor: '#d8b281'}]}
+                        onPress={() => setButton('added')}
+                        >
+                        <Text style={[styles.btnText, button === 'added' && {color: '#fff', fontWeight: '600'}]} >Added</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{width: '100%', height: '100%', padding: 16, borderTopWidth: 2, borderTopColor: '#fff'}}>
+                    {
+                        filteredBeaches.length > 0 ? (
+                            <ScrollView style={{width: '100%'}}>
+                                {
+                                    filteredBeaches.map((beach, index) => (
+                                        <TouchableOpacity 
+                                            key={index} 
+                                            style={{width: '100%', marginBottom: 20}}
+                                            onPress={() => navigation.navigate('BeachDetailsScreen', {beach: beach})}
+                                            >
+                                            <TouchableOpacity 
+                                                style={styles.favBtn} 
+                                                onPress={() => toggleFavorite(beach)}
+                                                >
+                                                <Icons type={'fav'} active={isFavorite(beach)} />
+                                            </TouchableOpacity>
+                                            <Image
+                                                source={typeof beach.image === 'string' ? { uri: beach.image } : beach.image} 
+                                                style={{width: '100%', height: 177, borderRadius: 12, marginBottom: 8}} />
+                                            <Text style={styles.name}>{beach.name}</Text>
+                                            {
+                                                filteredBeaches === addedBeaches && (
+                                                    <TouchableOpacity 
+                                                        style={{width: 24, height: 24, position: 'absolute', top: 16, left: 16, zIndex: 10}}
+                                                        onPress={() => confirmDelete(beach)}
+                                                        >
+                                                        <Icons type={'cross-img'} />
+                                                    </TouchableOpacity>
+                                                )
+                                            }
+                                        </TouchableOpacity>
+                                    ))
+                                }
+                                <View style={{height: 100}} />
+                            </ScrollView>
+                        ) : (
+                            <View style={{width: '80%', alignSelf: 'center', alignItems: 'center', marginVertical: 'auto'}}>
+                                <Image source={require('../assets/decor/nothing.png')} style={{width: 140, height: 140, resizeMode: 'contain', marginBottom: 24}} />
+                                <Text style={styles.nothingText}>There aren’t any beaches yet, please add something</Text>
+                            </View>
+                        )
+                    }
+                </View>
+
+                <Modal
+                    transparent={true}
+                    visible={modalVisible}
+                    animationType="fade"
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContainer}>
+                            <Text style={styles.modalText}>Are you sure you want to delete this beach?</Text>
+                            <TouchableOpacity 
+                                style={styles.modalBtn}
+                                onPress={deleteBeach}
+                            >
+                                <Text style={styles.deleteButtonText}>Delete</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={styles.modalBtn}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.closeButtonText}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                </View>
+
+        </ImageBackground>
     )
 };
 
@@ -196,7 +199,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: height * 0.07,
         paddingBottom: 90,
-        backgroundColor: '#f6f6f6'
     },
 
     favBtn: {
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '800',
         lineHeight: 28.64,
-        color: '#000',
+        color: '#a66702',
     },
 
     btnsContainer: {
@@ -238,21 +240,21 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '400',
         lineHeight: 18,
-        color: '#000',
+        color: '#a66702',
     },
 
     name: {
         fontSize: 14,
         fontWeight: '700',
         lineHeight: 16.41,
-        color: '#000',
+        color: '#a66702',
     },
 
     nothingText: {
         fontSize: 16,
         fontWeight: '400',
         lineHeight: 22.4,
-        color: '#000',
+        color: '#fff',
         textAlign: 'center'
     },
 

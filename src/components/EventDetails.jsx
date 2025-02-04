@@ -1,6 +1,6 @@
 // favorites
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Image, Dimensions, ScrollView, ImageBackground } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Icons from "./Icons";
@@ -49,44 +49,46 @@ const EventDetails = ({ event }) => {
     console.log(favorites)
 
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/back/1.png')} style={{flex: 1}}>
+            <View style={styles.container}>
 
-            <View style={styles.toolsContainer}>
-                <TouchableOpacity 
-                    style={styles.toolBtn} 
-                    onPress={() => navigation.goBack('')}
-                    >
-                    <Icons type={'back'} />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={[styles.toolBtn, {paddingHorizontal: 8}]} 
-                    onPress={toggleFavorite}
-                    >
-                    <Icons type={'fav'} active={favorites.some(fav => fav.name === event.name)} />
-                </TouchableOpacity>
-            </View>
-
-            <Image source={event.image} style={styles.image} />
-
-            <ScrollView style={{width: '100%', paddingHorizontal: 16}}>
-                <Text style={styles.name}>{event.name}</Text>
-
-                <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12}}>
-                    <Text style={styles.date}>{event.date}</Text>
-                    <Text style={styles.date}>{event.time}</Text>
+                <View style={styles.toolsContainer}>
+                    <TouchableOpacity 
+                        style={styles.toolBtn} 
+                        onPress={() => navigation.goBack('')}
+                        >
+                        <Icons type={'back'} />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[styles.toolBtn, {paddingHorizontal: 8}]} 
+                        onPress={toggleFavorite}
+                        >
+                        <Icons type={'fav'} active={favorites.some(fav => fav.name === event.name)} />
+                    </TouchableOpacity>
                 </View>
 
-                <Text style={styles.price}>{event.price}</Text>
+                <Image source={event.image} style={styles.image} />
 
-                {
-                    event.description.map((desc, i) => (
-                        <Text key={i} style={styles.description}>{desc}</Text>
-                    ))
-                }
-                <View style={{height: 100}} />
-            </ScrollView>
+                <ScrollView style={{width: '100%', paddingHorizontal: 16}}>
+                    <Text style={styles.name}>{event.name}</Text>
 
-        </View>
+                    <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12}}>
+                        <Text style={styles.date}>{event.date}</Text>
+                        <Text style={styles.date}>{event.time}</Text>
+                    </View>
+
+                    <Text style={styles.price}>{event.price}</Text>
+
+                    {
+                        event.description.map((desc, i) => (
+                            <Text key={i} style={styles.description}>{desc}</Text>
+                        ))
+                    }
+                    <View style={{height: 100}} />
+                </ScrollView>
+
+            </View>
+        </ImageBackground>
     )
 };
 
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#fff'
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     },
 
     toolsContainer: {

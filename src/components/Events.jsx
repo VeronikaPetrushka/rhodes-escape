@@ -1,6 +1,6 @@
 // favorites
 import React, { useState, useCallback } from 'react';
-import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, Image, ScrollView, Dimensions, StyleSheet, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import events from '../constants/events.js';
@@ -54,38 +54,40 @@ const Events = () => {
     console.log(favorites)
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Rhodes Events</Text>
+        <ImageBackground source={require('../assets/back/1.png')} style={{flex: 1}}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Rhodes Events</Text>
 
-            <ScrollView style={{width: '100%', backgroundColor: '#ececec', paddingHorizontal: 16, paddingTop: 16}}>
-                {
-                    events.map((event, index) => (
-                        <TouchableOpacity 
-                            key={index} 
-                            style={styles.card}
-                            onPress={() => navigation.navigate('EventDetailsScreen', {event: event})}
-                            >
+                <ScrollView style={{width: '100%', paddingHorizontal: 16, paddingTop: 16, borderTopWidth: 2, borderTopColor: '#fff'}}>
+                    {
+                        events.map((event, index) => (
                             <TouchableOpacity 
-                                style={styles.favBtn} 
-                                onPress={() => toggleFavorite(event)}
+                                key={index} 
+                                style={styles.card}
+                                onPress={() => navigation.navigate('EventDetailsScreen', {event: event})}
                                 >
-                                <Icons type={'fav'} active={isFavorite(event)} />
-                            </TouchableOpacity>
-                            <Image source={event.image} style={styles.image} />
-                            <View style={{width: '100%', paddingHorizontal: 12, paddingVertical: 14}}>
-                                <Text style={styles.name}>{event.name}</Text>
-                                <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                                    <Text style={styles.date}>{event.time} / {event.date}</Text>
-                                    <Text style={styles.price}>{event.price}</Text>
+                                <TouchableOpacity 
+                                    style={styles.favBtn} 
+                                    onPress={() => toggleFavorite(event)}
+                                    >
+                                    <Icons type={'fav'} active={isFavorite(event)} />
+                                </TouchableOpacity>
+                                <Image source={event.image} style={styles.image} />
+                                <View style={{width: '100%', paddingHorizontal: 12, paddingVertical: 14}}>
+                                    <Text style={styles.name}>{event.name}</Text>
+                                    <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                                        <Text style={styles.date}>{event.time} / {event.date}</Text>
+                                        <Text style={styles.price}>{event.price}</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                    ))
-                }
-                <View style={{height: 50}} />
-            </ScrollView>
+                            </TouchableOpacity>
+                        ))
+                    }
+                    <View style={{height: 50}} />
+                </ScrollView>
 
-        </View>
+            </View>
+        </ImageBackground>
     )
 };
 
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         paddingBottom: 90,
-        backgroundColor: '#fff'
     },
 
     favBtn: {
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '800',
         lineHeight: 28.64,
-        color: '#000',
+        color: '#a66702',
         textAlign: 'center',
         marginTop: height * 0.07,
         marginBottom: 30
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '700',
         lineHeight: 16.71,
-        color: '#000',
+        color: '#a66702',
         marginBottom: 6
     },
 

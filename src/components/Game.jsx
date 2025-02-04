@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, View, Text, Image, Dimensions, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, Image, Dimensions, StyleSheet, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import Icons from './Icons.jsx';
@@ -159,21 +159,23 @@ const Game = ({ item }) => {
     );
 
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/back/1.png')} style={{flex: 1}}>
+            <View style={styles.container}>
 
-            <View style={{width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 16, paddingHorizontal: 16}}>
-                <TouchableOpacity 
-                    style={styles.backBtn}
-                    onPress={() => navigation.goBack('')}
-                    >
-                    <Icons type={'back'} />
-                </TouchableOpacity>
-                <Text style={styles.title}>{item.level} lvl</Text>
+                <View style={{width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 16, paddingHorizontal: 16}}>
+                    <TouchableOpacity 
+                        style={styles.backBtn}
+                        onPress={() => navigation.goBack('')}
+                        >
+                        <Icons type={'back'} />
+                    </TouchableOpacity>
+                    <Text style={styles.title}>{item.level} lvl</Text>
+                </View>
+
+                {currentQuestionIndex < item.questions.length ? renderQuestion() : renderFinishScreen()}
+
             </View>
-
-            {currentQuestionIndex < item.questions.length ? renderQuestion() : renderFinishScreen()}
-
-        </View>
+        </ImageBackground>
     )
 };
 
@@ -183,7 +185,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         paddingTop: height * 0.07,
-        backgroundColor: '#fff'
     },
 
     backBtn: {
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '800',
         lineHeight: 28.64,
-        color: '#000',
+        color: '#a66702',
     },
 
 
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
 
     finishTitle: {
         fontSize: 32,
-        color: '#d8b281',
+        color: '#a66702',
         fontWeight: '700',
         lineHeight: 38.2,
         marginBottom: 32,
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
         padding: 14.5,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#d8b281',
+        backgroundColor: '#a66702',
         borderRadius: 12,
         marginBottom: 24
     },
@@ -261,14 +262,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 2,
-        borderColor: '#3d3d3d',
+        borderColor: '#fff',
         borderRadius: 12,
         marginBottom: 24
     },
 
     finishBtnText: {
         fontSize: 16,
-        color: '#3d3d3d',
+        color: '#fff',
         fontWeight: '500',
         lineHeight: 19.09,
     }

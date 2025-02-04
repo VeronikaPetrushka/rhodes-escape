@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, Dimensions, StyleSheet, Linking } from 'react-native';
+import { TouchableOpacity, View, Text, Dimensions, StyleSheet, Linking, ImageBackground } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import Icons from './Icons.jsx';
 
@@ -21,34 +21,36 @@ const Beaches = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/back/1.png')} style={{flex: 1}}>
+            <View style={styles.container}>
 
-            <View style={{ marginBottom: 16, paddingHorizontal: 16, alignSelf: 'flex-start'}}>
-                <Text style={styles.title}>Settings</Text>
+                <View style={{ marginBottom: 16, paddingHorizontal: 16, alignSelf: 'flex-start'}}>
+                    <Text style={styles.title}>Settings</Text>
+                </View>
+
+                <View style={{ width: '100%', height: '100%', borderTopWidth: 2, borderTopColor: '#fff', padding: 16}}>
+                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('FavoritesScreen')}>
+                        <View style={{width: 32, height: 32, marginRight: 15}}>
+                            <Icons type={'settings-fav'} />
+                        </View>
+                        <Text style={styles.btnText}>Favorites</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={handlePrivacyPolicy}>
+                        <View style={{width: 32, height: 32, marginRight: 15}}>
+                            <Icons type={'settings-policy'} />
+                        </View>
+                        <Text style={styles.btnText}>Privacy Policy</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={handleRate}>
+                        <View style={{width: 32, height: 32, marginRight: 15}}>
+                            <Icons type={'settings-rate'} />
+                        </View>
+                        <Text style={styles.btnText}>Rate us</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
-
-            <View style={{ width: '100%', height: '100%', backgroundColor: '#fff', padding: 16}}>
-                <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('FavoritesScreen')}>
-                    <View style={{width: 32, height: 32, marginRight: 15}}>
-                        <Icons type={'settings-fav'} />
-                    </View>
-                    <Text style={styles.btnText}>Favorites</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress={handlePrivacyPolicy}>
-                    <View style={{width: 32, height: 32, marginRight: 15}}>
-                        <Icons type={'settings-policy'} />
-                    </View>
-                    <Text style={styles.btnText}>Privacy Policy</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress={handleRate}>
-                    <View style={{width: 32, height: 32, marginRight: 15}}>
-                        <Icons type={'settings-rate'} />
-                    </View>
-                    <Text style={styles.btnText}>Rate us</Text>
-                </TouchableOpacity>
-            </View>
-
-        </View>
+        </ImageBackground>
     )
 };
 
@@ -59,14 +61,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: height * 0.07,
         paddingBottom: 90,
-        backgroundColor: '#f6f6f6'
     },
 
     title: {
         fontSize: 24,
         fontWeight: '800',
         lineHeight: 28.64,
-        color: '#000',
+        color: '#a66702',
     },
 
     btn: {

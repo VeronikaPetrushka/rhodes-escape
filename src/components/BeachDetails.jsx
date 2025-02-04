@@ -1,6 +1,6 @@
 // favorites
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Image, Dimensions, ScrollView, ImageBackground } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Icons from "./Icons";
@@ -49,51 +49,53 @@ const BeachDetails = ({ beach }) => {
     console.log(favorites)
 
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/back/1.png')} style={{flex: 1}}>
+            <View style={styles.container}>
 
-            <View style={styles.toolsContainer}>
-                <TouchableOpacity 
-                    style={styles.toolBtn} 
-                    onPress={() => navigation.goBack('')}
-                    >
-                    <Icons type={'back'} />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={[styles.toolBtn, {paddingHorizontal: 8}]} 
-                    onPress={toggleFavorite}
-                    >
-                    <Icons type={'fav'} active={favorites.some(fav => fav.name === beach.name)} />
-                </TouchableOpacity>
-            </View>
+                <View style={styles.toolsContainer}>
+                    <TouchableOpacity 
+                        style={styles.toolBtn} 
+                        onPress={() => navigation.goBack('')}
+                        >
+                        <Icons type={'back'} />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[styles.toolBtn, {paddingHorizontal: 8}]} 
+                        onPress={toggleFavorite}
+                        >
+                        <Icons type={'fav'} active={favorites.some(fav => fav.name === beach.name)} />
+                    </TouchableOpacity>
+                </View>
 
-            <Image source={typeof beach.image === 'string' ? { uri: beach.image } : beach.image} style={styles.image} />
+                <Image source={typeof beach.image === 'string' ? { uri: beach.image } : beach.image} style={styles.image} />
 
-            <ScrollView style={{width: '100%', paddingHorizontal: 16}}>
+                <ScrollView style={{width: '100%', paddingHorizontal: 16}}>
 
-                <Text style={styles.name}>{beach.name}</Text>
+                    <Text style={styles.name}>{beach.name}</Text>
 
-                <Text style={styles.location}>{beach.location}</Text>
+                    <Text style={styles.location}>{beach.location}</Text>
 
-                <Text style={styles.description}>{beach.description}</Text>
+                    <Text style={styles.description}>{beach.description}</Text>
 
-                {
-                    beach.facilities && (
-                        <Text style={[styles.name, {fontSize: 20}]}>Facilities on the site</Text>
-                    )
-                }
+                    {
+                        beach.facilities && (
+                            <Text style={[styles.name, {fontSize: 20}]}>Facilities on the site</Text>
+                        )
+                    }
 
-                {
-                    beach.facilities?.map((f, i) => (
-                        <View key={i} style={{width: '100%', alignItems: 'flex-start', marginBottom: 12}}>
-                            <Text style={styles.facilityName}>{f.name}</Text>
-                            <Text style={styles.facilityDesc}>{f.description}</Text>
-                        </View>
-                    ))
-                }
+                    {
+                        beach.facilities?.map((f, i) => (
+                            <View key={i} style={{width: '100%', alignItems: 'flex-start', marginBottom: 12}}>
+                                <Text style={styles.facilityName}>{f.name}</Text>
+                                <Text style={styles.facilityDesc}>{f.description}</Text>
+                            </View>
+                        ))
+                    }
 
-            </ScrollView>
+                </ScrollView>
 
-        </View>
+                </View>
+        </ImageBackground>
     )
 };
 
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#fff'
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     },
 
     toolsContainer: {
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '400',
         lineHeight: 19.09,
-        color: '#d8b281',
+        color: '#a66702',
         marginBottom: 24
     },
 
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '400',
         lineHeight: 14.32,
-        color: '#999',
+        color: '#a66702',
     }
 
 });
